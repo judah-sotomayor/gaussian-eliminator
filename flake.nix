@@ -47,16 +47,21 @@
             programs.nixfmt.strict = true;
           };
 
-          packages = {
-            gaussian-eliminator =
-              with pkgs.lispPackagesLite;
-              lispDerivation {
-                src = pkgs.lib.cleanSource ./.;
-                lispSystems = [ "gaussian-eliminator" ];
-                lispDependencies = [ serapeum ];
-                lispCheckDependencies = [ fiasco ];
-              };
-          };
+          packages =
+            let
+              gaussian-eliminator =
+                with pkgs.lispPackagesLite;
+                lispDerivation {
+                  src = pkgs.lib.cleanSource ./.;
+                  lispSystems = [ "gaussian-eliminator" ];
+                  lispDependencies = [ serapeum ];
+                  lispCheckDependencies = [ fiasco ];
+                };
+            in
+            {
+              default = gaussian-eliminator;
+              inherit gaussian-eliminator;
+            };
 
           devShells.default = pkgs.mkShell {
             shellHook = ''
